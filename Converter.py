@@ -59,3 +59,10 @@ class Converter:
 
         return self.DecimalToBase(self.OctalToDecimal(number), 16)
 
+    def BinaryToOctal(self, number):
+
+        return self.DecimalToBase(self.BaseToDecimal(number, 2), 8)
+
+#code in base from https://github.com/davidsal/chibisistemas/blob/master/Librerias/Python3/ChibiBases/ChibiBases.py
+
+
