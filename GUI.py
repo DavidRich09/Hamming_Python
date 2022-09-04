@@ -182,7 +182,8 @@ class GUI(customtkinter.CTk):
 
         for i in tempList:
 
-            newNumber += i.get()[0]
+            if i.get() != "":
+                newNumber += i.get()
 
         self.octal = self.converter.BinaryToOctal(newNumber)
         self.numberEntry.delete(0, END)
