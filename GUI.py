@@ -211,17 +211,17 @@ class GUI(customtkinter.CTk):
         # generate converter table with labels
         self.label = customtkinter.CTkLabel(master=self.frame, text="Converter Table")
         self.label.place(x=0, y=50)
-        self.label2 = customtkinter.CTkLabel(master=self.frame,
+        self.label = customtkinter.CTkLabel(master=self.frame,
         text="Tabla 1 Calculo de los bits de paridad en el código Hamming")
-        self.label2.place(x=510, y=45)
+        self.label.place(x=510, y=45)
 
-        self.label3 = customtkinter.CTkLabel(master=self.frame,
+        self.label = customtkinter.CTkLabel(master=self.frame,
         text="Tabla 2 Verificación de los bits de paridad con el código Hamming")
-        self.label3.place(x=510, y=310)
+        self.label.place(x=510, y=320)
 
         self.labelErrorNumber = customtkinter.CTkLabel(master=self.frame,
         text="")
-        self.label3.place(x=510, y=610)
+        self.labelErrorNumber.place(x=510, y=500)
 
         self.decimal = customtkinter.CTkLabel(master=self.frame, text="Decimal")
         self.decimal.place(x=0, y=70)
@@ -472,10 +472,13 @@ class GUI(customtkinter.CTk):
         tabla2 = Table(root, 7, 20, lista2, 10)
 
         if (hammingErrorPos != 0):
-
-            self.labelErrorNumber.config(text="Se ha encontrado un error en la posición: " + str(hammingErrorPos))
+            print(hammingErrorPos)
+            if(self.converter.BinaryToDecimal(hammingErrorPos) > 17):
+                self.labelErrorNumber.config(text="Error detectado. No es posible verificar su posición")
+            else:
+                self.labelErrorNumber.config(text="Se ha encontrado un error el bit: " + str(hammingErrorPos))
         else:
-            self.labelErrorNumber.config(text="No se han encontrado errores")
+                self.labelErrorNumber.config(text="No se han detectado errores")
 
 
     def generar(self):
