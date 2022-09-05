@@ -183,6 +183,7 @@ class GUI(customtkinter.CTk):
         self.hamming = Code_Hamming()
 
         self.paridad = False
+        self.bipolar = False
 
         # main frame
         self.frame = customtkinter.CTkFrame(master=self.master, width=1105, height=600)
@@ -197,11 +198,11 @@ class GUI(customtkinter.CTk):
         self.tableHammingVerification.place(x=150, y=350)
 
         # number entry
-        self.numberEntry = customtkinter.CTkEntry(master=self.frame, placeholder_text="Enter a number ")
+        self.numberEntry = customtkinter.CTkEntry(master=self.frame, placeholder_text="Introducir numero")
         self.numberEntry.place(x=10, y=10)
 
         # entry number button
-        self.numberButton = customtkinter.CTkButton(master=self.frame, text="Calculate", command=self.Calculate)
+        self.numberButton = customtkinter.CTkButton(master=self.frame, text="Calcular", command=self.Calculate)
         self.numberButton.place(x=160, y=10)
 
         #generate Hamming code
@@ -209,7 +210,7 @@ class GUI(customtkinter.CTk):
         self.GnrHamButton.place(x=450, y=10)
 
         # generate converter table with labels
-        self.label = customtkinter.CTkLabel(master=self.frame, text="Converter Table")
+        self.label = customtkinter.CTkLabel(master=self.frame, text="Tabla de conversion")
         self.label.place(x=0, y=50)
         self.label = customtkinter.CTkLabel(master=self.frame,
         text="Tabla 1 Calculo de los bits de paridad en el código Hamming")
@@ -229,7 +230,7 @@ class GUI(customtkinter.CTk):
         self.decimalNumber = customtkinter.CTkLabel(master=self.frame, text="")
         self.decimalNumber.place(x=130, y=70)
 
-        self.binary = customtkinter.CTkLabel(master=self.frame, text="Binary")
+        self.binary = customtkinter.CTkLabel(master=self.frame, text="Binario")
         self.binary.place(x=0, y=90)
 
         self.binaryNumber = customtkinter.CTkLabel(master=self.frame, text="")
@@ -244,9 +245,15 @@ class GUI(customtkinter.CTk):
         # Switch to parity
 
         self.switchVar = StringVar(value="on")
-        self.switchVar = customtkinter.CTkSwitch(master=self.frame, text="Even parity", command=self.switch_event,
+        self.switchVar = customtkinter.CTkSwitch(master=self.frame, text="Paridad par", command=self.switch_event,
                                                  variable=self.switchVar, onvalue="On", offvalue="Off")
         self.switchVar.place(x=310, y=15)
+
+        # Switch to bipolar
+        self.switchVar2 = StringVar(value="on")
+        self.switchVar2 = customtkinter.CTkSwitch(master=self.frame, text="Bipolar", command=self.switch_event2,
+                                                    variable=self.switchVar2, onvalue="On", offvalue="Off")
+        self.switchVar2.place(x=310, y=50)
 
         # entry for each number in binary table in total is 11 numbers
 
@@ -308,6 +315,18 @@ class GUI(customtkinter.CTk):
         print(self.paridad)
 
 
+    def switch_event2(self):
+
+        if self.switchVar2.get() == "On":
+
+            self.bipolar = True
+
+        else:
+
+            self.bipolar = False
+
+        print(self.bipolar)
+
 
     def Calculate(self):
 
@@ -328,14 +347,14 @@ class GUI(customtkinter.CTk):
 
             print("binary with zeros ", self.binary)
 
-            graphic = Graphic(self.binary)
+            graphic = Graphic(self.binary, self.bipolar)
             graphic.Run()
 
         else:
 
-            self.decimalNumber.configure(text="Mistake with the octal number")
-            self.binaryNumber.configure(text="Mistake with the octal number")
-            self.hexaNumber.configure(text="Mistake with the octal number")
+            self.decimalNumber.configure(text="Error con el numero octal")
+            self.binaryNumber.configure(text="Error con el numero octal")
+            self.hexaNumber.configure(text="Error con el numero octal")
 
             for i in self.listEntry:
                 i.configure(placeholder_text="")
@@ -351,11 +370,6 @@ class GUI(customtkinter.CTk):
             return False
 
     def SetNumberOnEntry(self, number):
-
-        if self.ValidateChangeNumber():
-            self.labelError = customtkinter.CTkLabel(master=self.frame, text="Error en el número binario")
-            self.labelError.place(x=630, y=900)
-            return False
 
         number = number[::-1]
         index = 0
@@ -404,6 +418,7 @@ class GUI(customtkinter.CTk):
         return False
 
     def VerifyNewNumber(self):
+
         self.GetNewNumber()
         self.verificarHamm(self.newNumber, self.tableHammingVerification, self.paridad)
 
@@ -474,11 +489,11 @@ class GUI(customtkinter.CTk):
         if (hammingErrorPos != 0):
             print(hammingErrorPos)
             if(self.converter.BinaryToDecimal(hammingErrorPos) > 17):
-                self.labelErrorNumber.config(text="Error detectado. No es posible verificar su posición")
+                self.labelErrorNumber.configure(text="Error detectado. No es posible verificar su posición")
             else:
-                self.labelErrorNumber.config(text="Se ha encontrado un error el bit: " + str(hammingErrorPos))
+                self.labelErrorNumber.configure(text="Se ha encontrado un error el bit: " + str(hammingErrorPos))
         else:
-                self.labelErrorNumber.config(text="No se han detectado errores")
+                self.labelErrorNumber.configure(text="No se han detectado errores")
 
 
     def generar(self):
