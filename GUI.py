@@ -125,7 +125,7 @@ class GUI(customtkinter.CTk):
         super().__init__()
 
         # create a window
-        self.geometry(f"{905}x{600}")
+        self.geometry(f"{1105}x{600}")
         self.title("Hamming Code")
         self.resizable(False, False)
 
@@ -136,13 +136,13 @@ class GUI(customtkinter.CTk):
         self.paridad = False
 
         # main frame
-        self.frame = customtkinter.CTkFrame(master=self.master, width=905, height=600)
+        self.frame = customtkinter.CTkFrame(master=self.master, width=1105, height=600)
         self.frame.place(x=0, y=0)
 
 
         # Table frame
         self.table = customtkinter.CTkFrame(master=self.master, width=400, height=200)
-        self.table.place(x=100, y=250)
+        self.table.place(x=300, y=75)
 
         # numbre entry
         self.numberEntry = customtkinter.CTkEntry(master=self.frame, placeholder_text="Enter a number ")
@@ -152,15 +152,16 @@ class GUI(customtkinter.CTk):
         self.numberButton = customtkinter.CTkButton(master=self.frame, text="Calculate", command=self.Calculate)
         self.numberButton.place(x=160, y=10)
 
+        #generate Hamming code
         self.GnrHamButton = customtkinter.CTkButton(master=self.frame, text="Generar Hamming", command=self.generar)
-        self.GnrHamButton.place(x=530, y=200)
+        self.GnrHamButton.place(x=450, y=10)
 
         # generate converter table with labels
         self.label = customtkinter.CTkLabel(master=self.frame, text="Converter Table")
         self.label.place(x=0, y=50)
         self.label = customtkinter.CTkLabel(master=self.frame,
                                             text="Tabla 1 Calculo de los bits de paridad en el codigo Hamming")
-        self.label.place(x=320, y=230)
+        self.label.place(x=510, y=45)
 
         self.decimal = customtkinter.CTkLabel(master=self.frame, text="Decimal")
         self.decimal.place(x=0, y=70)
@@ -230,7 +231,7 @@ class GUI(customtkinter.CTk):
 
         # Button for change binary number
 
-        self.changeButton = customtkinter.CTkButton(master=self.frame, text="Change", command=self.GetNewNumber)
+        self.changeButton = customtkinter.CTkButton(master=self.frame, text="Verificar", command=self.GetNewNumber)
         # self.changeButton.place(x=385, y=120)
 
 
@@ -296,8 +297,8 @@ class GUI(customtkinter.CTk):
 
         number = number[::-1]
         index = 0
-        posx = 600
-        posy = 420
+        posx = 800
+        posy = 270
 
         for i in self.listEntry:
 
@@ -316,7 +317,7 @@ class GUI(customtkinter.CTk):
             self.listEntry[i].place(x=posx, y=posy)
             posx -= 25
 
-        self.changeButton.place(x=650, y=420)
+        self.changeButton.place(x=900, y=270)
 
     def GetNewNumber(self):
 
