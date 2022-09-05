@@ -1,6 +1,7 @@
 from tkinter import *
 import customtkinter
 from Converter import Converter
+from graphic import Graphic
 
 # need custom tkinters for this to work
 # pip3 install customtkinter
@@ -268,6 +269,8 @@ class GUI(customtkinter.CTk):
 
             print("binary with zeros ", self.binary)
 
+            graphic = Graphic(self.binary)
+            graphic.Run()
 
         else:
 
