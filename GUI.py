@@ -119,6 +119,53 @@ class Code_Hamming:
         # print(bitlist)
         return bitlist
 
+    def verBitParidad(self, binary, evenParity):
+
+        verificationlist = [[], [], [], [], []]
+        errorPosition = []
+        bitlist = binary
+
+        paritybit = 0
+
+        while paritybit < 5:
+
+            amountOf1s = self.checkbits(self.p[paritybit], bitlist)
+
+            if evenParity:
+                if amountOf1s % 2 == 0:
+                    if bitlist[2 ** paritybit - 1] != '1':
+                        verificationlist[paritybit] = ['     Error    ', '1']
+                    else:
+                        verificationlist[paritybit] = ['   Correcto   ', '0']
+                else:
+                    if bitlist[2 ** paritybit - 1] != '0':
+                        verificationlist[paritybit] = ['     Error    ', '1']
+                    else:
+                        verificationlist[paritybit] = ['   Correcto   ', '0']
+            else:
+                if amountOf1s % 2 == 0:
+                    if bitlist[2 ** paritybit - 1] != '0':
+                        verificationlist[paritybit] = ['     Error    ', '1']
+                    else:
+                        verificationlist[paritybit] = ['   Correcto   ', '0']
+                else:
+                    if bitlist[2 ** paritybit - 1] != '1':
+                        verificationlist[paritybit] = ['     Error    ', '1']
+                    else:
+                        verificationlist[paritybit] = ['   Correcto   ', '0']
+            paritybit += 1
+
+        for i in verificationlist:
+            errorPosition.append(i[1])
+
+        errorPosition.reverse()
+
+        errornum = ''.join(errorPosition)
+
+        errornum = int(errornum, 2)
+
+        return (verificationlist, errornum)
+
 
 class GUI(customtkinter.CTk):
 
@@ -126,6 +173,7 @@ class GUI(customtkinter.CTk):
         super().__init__()
 
         # create a window
+        self.newNumber = []
         self.geometry(f"{1105}x{600}")
         self.title("Hamming Code")
         self.resizable(False, False)
@@ -140,12 +188,15 @@ class GUI(customtkinter.CTk):
         self.frame = customtkinter.CTkFrame(master=self.master, width=1105, height=600)
         self.frame.place(x=0, y=0)
 
+        # HammingGeneratorTable frame
+        self.tableHammingGenerator = customtkinter.CTkFrame(master=self.master, width=400, height=200)
+        self.tableHammingGenerator.place(x=325, y=75)
 
-        # Table frame
-        self.table = customtkinter.CTkFrame(master=self.master, width=400, height=200)
-        self.table.place(x=300, y=75)
+        # HammingGeneratorVerification frame
+        self.tableHammingVerification = customtkinter.CTkFrame(master=self.master, width=400, height=200)
+        self.tableHammingVerification.place(x=150, y=350)
 
-        # numbre entry
+        # number entry
         self.numberEntry = customtkinter.CTkEntry(master=self.frame, placeholder_text="Enter a number ")
         self.numberEntry.place(x=10, y=10)
 
@@ -160,9 +211,17 @@ class GUI(customtkinter.CTk):
         # generate converter table with labels
         self.label = customtkinter.CTkLabel(master=self.frame, text="Converter Table")
         self.label.place(x=0, y=50)
-        self.label = customtkinter.CTkLabel(master=self.frame,
-                                            text="Tabla 1 Calculo de los bits de paridad en el codigo Hamming")
-        self.label.place(x=510, y=45)
+        self.label2 = customtkinter.CTkLabel(master=self.frame,
+        text="Tabla 1 Calculo de los bits de paridad en el código Hamming")
+        self.label2.place(x=510, y=45)
+
+        self.label3 = customtkinter.CTkLabel(master=self.frame,
+        text="Tabla 2 Verificación de los bits de paridad con el código Hamming")
+        self.label3.place(x=510, y=310)
+
+        self.labelErrorNumber = customtkinter.CTkLabel(master=self.frame,
+        text="")
+        self.label3.place(x=510, y=610)
 
         self.decimal = customtkinter.CTkLabel(master=self.frame, text="Decimal")
         self.decimal.place(x=0, y=70)
@@ -232,7 +291,7 @@ class GUI(customtkinter.CTk):
 
         # Button for change binary number
 
-        self.changeButton = customtkinter.CTkButton(master=self.frame, text="Verificar", command=self.GetNewNumber)
+        self.changeButton = customtkinter.CTkButton(master=self.frame, text="Verificar", command=self.VerifyNewNumber)
         # self.changeButton.place(x=385, y=120)
 
 
@@ -294,8 +353,8 @@ class GUI(customtkinter.CTk):
     def SetNumberOnEntry(self, number):
 
         if self.ValidateChangeNumber():
-            self.labelError = customtkinter.CTkLabel(master=self.frame, text="Mistake with the binary number")
-            self.labelError.place(x=630, y=80)
+            self.labelError = customtkinter.CTkLabel(master=self.frame, text="Error en el número binario")
+            self.labelError.place(x=630, y=900)
             return False
 
         number = number[::-1]
@@ -328,7 +387,6 @@ class GUI(customtkinter.CTk):
         tempList = self.listEntry[::-1]
 
         for i in tempList:
-
             if i.get() != "":
                 self.newNumber.append(i.get()[0])
 
@@ -345,6 +403,9 @@ class GUI(customtkinter.CTk):
 
         return False
 
+    def VerifyNewNumber(self):
+        self.GetNewNumber()
+        self.verificarHamm(self.newNumber, self.tableHammingVerification, self.paridad)
 
     def generarHamm(self, binary, root, paridad):
 
@@ -354,25 +415,24 @@ class GUI(customtkinter.CTk):
 
         self.SetNumberOnEntry(self.hammOutput)
 
-        lista1 = [(
-                  " ", "p1", "p2", "d1", "p3", "d2", "d3", "d4", "p4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "p5",
+        lista1 = [("                             ", "p1", "p2", "d1", "p3", "d2", "d3", "d4", "p4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "p5",
                   "d12"),
                   ("Palabra de datos sin paridad:", " ", " ", binary[0], " ", binary[1], binary[2], binary[3], " ",
                    binary[4], binary[5], binary[6],
                    binary[7], binary[8], binary[9], binary[10], " ", binary[11]),
-                  ("p1", self.hammOutput[0], " ", self.hammOutput[2], " ", self.hammOutput[4], "", self.hammOutput[6], " ", self.hammOutput[8],
+                  ("             p1              ", self.hammOutput[0], " ", self.hammOutput[2], " ", self.hammOutput[4], "", self.hammOutput[6], " ", self.hammOutput[8],
                    " ", self.hammOutput[10],
                    " ", self.hammOutput[12], " ", self.hammOutput[14], " ", self.hammOutput[16]),
-                  ("p2", " ", self.hammOutput[1], self.hammOutput[2], " ", " ", self.hammOutput[5], self.hammOutput[6], " ", " ",
+                  ("             p2              ", " ", self.hammOutput[1], self.hammOutput[2], " ", " ", self.hammOutput[5], self.hammOutput[6], " ", " ",
                    self.hammOutput[9], self.hammOutput[10],
                    " ", " ", self.hammOutput[13], self.hammOutput[14], " ", " "),
-                  ("p3", " ", " ", " ", self.hammOutput[3], self.hammOutput[4], self.hammOutput[5], self.hammOutput[6], " ", " ", " ", " ",
+                  ("             p3              ", " ", " ", " ", self.hammOutput[3], self.hammOutput[4], self.hammOutput[5], self.hammOutput[6], " ", " ", " ", " ",
                    self.hammOutput[11],
                    self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], " ", " "),
-                  ("p4", " ", " ", " ", " ", " ", " ", " ", self.hammOutput[7], self.hammOutput[8], self.hammOutput[9], self.hammOutput[10],
+                  ("             p4              ", " ", " ", " ", " ", " ", " ", " ", self.hammOutput[7], self.hammOutput[8], self.hammOutput[9], self.hammOutput[10],
                    self.hammOutput[11],
                    self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], " ", " "),
-                  ("p5", " ", " ", " ", " ", " ", " ", " ", "", "", "", "", "", "", "", "", self.hammOutput[15],
+                  ("             p5              ", " ", " ", " ", " ", " ", " ", " ", "", "", "", "", "", "", "", "", self.hammOutput[15],
                    self.hammOutput[16]),
                   ("Palabra de datos con paridad:", self.hammOutput[0], self.hammOutput[1], self.hammOutput[2], self.hammOutput[3],
                    self.hammOutput[4], self.hammOutput[5],
@@ -380,10 +440,48 @@ class GUI(customtkinter.CTk):
                    self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], self.hammOutput[15], self.hammOutput[16])]
 
         tabla1 = Table(root, 8, 18, lista1, 10)
+        self.GetNewNumber()
+
+    def verificarHamm(self, binary, root, parity):
+
+        print("Verificando codigo Hamming")
+
+        hammingVerBits, hammingErrorPos = self.hamming.verBitParidad(binary, parity)
+
+        lista2 = [("                          ", "p1", "p2", "d1", "p3", "d2", "d3", "d4", "p4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "p5",
+                  "d12", "Prueba Paridad", "Bit de Paridad"),
+
+                  ("Palabra de datos recibida:", binary[0], binary[1], binary[2], binary[3], binary[4], binary[5], binary[6], binary[7],
+                   binary[8], binary[9], binary[10], binary[11], binary[12], binary[13],binary[14], binary[15], binary[16], "              ", "              "),
+
+                  ("            p1            ", binary[0], " ", binary[2], " ", binary[4], "", binary[6], " ", binary[8], " ", binary[10],
+                   " ", binary[12], " ", binary[14], " ", binary[16], hammingVerBits[0][0], "      " + hammingVerBits[0][1] + "       "),
+
+                  ("            p2            ", " ", binary[1], binary[2], " ", " ", binary[5], binary[6], " ", " ", binary[9], binary[10],
+                   " ", " ", binary[13], binary[14], " ", " ", hammingVerBits[1][0], "      " + hammingVerBits[1][1] + "       "),
+
+                  ("            p3            ", " ", " ", " ", binary[3], binary[4], binary[5], binary[6], " ", " ", " ", " ", binary[11],
+                   binary[12], binary[13], binary[14], " ", " ", hammingVerBits[2][0], "      " + hammingVerBits[2][1] + "       "),
+
+                  ("            p4            ", " ", " ", " ", " ", " ", " ", " ", binary[7], binary[8], binary[9], binary[10], binary[11],
+                   binary[12], binary[13], binary[14], " ", " ", hammingVerBits[3][0], "      " + hammingVerBits[3][1] + "       "),
+
+                  ("            p5            ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", binary[15],
+                   binary[16], hammingVerBits[4][0], "      " + hammingVerBits[4][1] + "       ")]
+
+        tabla2 = Table(root, 7, 20, lista2, 10)
+
+        if (hammingErrorPos != 0):
+
+            self.labelErrorNumber.config(text="Se ha encontrado un error en la posición: " + str(hammingErrorPos))
+        else:
+            self.labelErrorNumber.config(text="No se han encontrado errores")
+
 
     def generar(self):
         num = "110101100101"
-        self.generarHamm(self.binary, self.table, self.paridad)
+        self.generarHamm(self.binary, self.tableHammingGenerator, self.paridad)
+        self.verificarHamm(self.newNumber, self.tableHammingVerification, self.paridad)
         print("Generado")
 
 
