@@ -67,8 +67,6 @@ class Converter:
 
         return self.BaseToDecimal(number, 2)
 
-print("Testo binary to decimal")
-print(Converter().BinaryToDecimal(101010))
 
 #code in base from https://github.com/davidsal/chibisistemas/blob/master/Librerias/Python3/ChibiBases/ChibiBases.py
 
