@@ -42,13 +42,13 @@ class Graphic():
                 if moved==False:
                     moved = True
 
-                    canvas.create_line(x,y,x,y - 70,fill="red",width=5)
-                    y -= 70
+                    canvas.create_line(x,y,x,y - 35,fill="red",width=5)
+                    y -= 35
                 else:
                     moved = False
 
-                    canvas.create_line(x, y, x, y + 70, fill="red", width=5)
-                    y += 70
+                    canvas.create_line(x, y, x, y + 35, fill="red", width=5)
+                    y += 35
 
                 canvas.create_line(x,y,x+60,y,fill="red",width=5)
 
@@ -67,34 +67,29 @@ class Graphic():
         canvas = Canvas(self.win,scrollregion=(0,0,900,0))
         x = 5
         y = 150
-        up = True
+        moved = True
         canvas.create_line(5, 185, x + len(self.signal)*60 + 10, 185, fill="black", width=5)
         canvas.create_line(5, 50, 5, 300, fill="black", width=5)
 
         for i in range(0,len(self.signal)):
-
+            print(self.signal[i])
             if (self.signal[i] == "1"):
+                if moved==False:
+                    moved = True
 
-                if up == True:
-
-                    canvas.create_line(x, y, x + 60, y , fill="blue", width=5)
-
-                else:
-                    canvas.create_line(x, y, x, y - 70, fill="blue", width=5)
-                    canvas.create_line(x, y - 70, x + 60, y - 70 , fill="blue", width=5)
+                    canvas.create_line(x,y,x,y - 70,fill="blue",width=5)
                     y -= 70
-                    up = True
+                else:
+                    moved = False
+
+                    canvas.create_line(x, y, x, y + 70, fill="blue", width=5)
+                    y += 70
+
+                canvas.create_line(x,y,x+60,y,fill="blue",width=5)
 
             else:
-
-                if up == True:
-                    canvas.create_line(x, y, x, y + 70, fill="blue", width=5)
-                    canvas.create_line(x, y + 70, x + 60, y + 70 , fill="blue", width=5)
-                    y += 70
-                    up = False
-                else:
-                    canvas.create_line(x, y, x + 60, y , fill="blue", width=5)
-
+                #canvas.create_line(x, y, x, y + 50, fill="red",width=5)
+                canvas.create_line(x, y, x + 60, y,fill="blue",width=5)
 
             x += 60
 
