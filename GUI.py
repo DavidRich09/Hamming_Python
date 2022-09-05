@@ -133,11 +133,12 @@ class GUI(customtkinter.CTk):
         self.converter = Converter()
         self.hamming = Code_Hamming()
 
-        self.paridad = True
+        self.paridad = False
 
         # main frame
         self.frame = customtkinter.CTkFrame(master=self.master, width=905, height=600)
         self.frame.place(x=0, y=0)
+
 
         # Table frame
         self.table = customtkinter.CTkFrame(master=self.master, width=400, height=200)
@@ -150,10 +151,6 @@ class GUI(customtkinter.CTk):
         # entry number button
         self.numberButton = customtkinter.CTkButton(master=self.frame, text="Calculate", command=self.Calculate)
         self.numberButton.place(x=160, y=10)
-        self.ParButton = customtkinter.CTkButton(master=self.frame, text="Par", command=self.par)
-        self.ParButton.place(x=160, y=200)
-        self.ImparButton = customtkinter.CTkButton(master=self.frame, text="Impar", command=self.impar)
-        self.ImparButton.place(x=330, y=200)
 
         self.GnrHamButton = customtkinter.CTkButton(master=self.frame, text="Generar Hamming", command=self.generar)
         self.GnrHamButton.place(x=530, y=200)
@@ -193,43 +190,42 @@ class GUI(customtkinter.CTk):
         # entry for each number in binary table in total is 11 numbers
 
         self.entry1 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry1.place(x=330, y=70)
 
         self.entry2 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry2.place(x=355, y=70)
 
         self.entry3 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry3.place(x=380, y=70)
 
         self.entry4 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry4.place(x=405, y=70)
 
         self.entry5 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry5.place(x=430, y=70)
 
         self.entry6 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry6.place(x=455, y=70)
 
         self.entry7 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry7.place(x=480, y=70)
 
         self.entry8 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry8.place(x=505, y=70)
 
         self.entry9 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry9.place(x=530, y=70)
 
         self.entry10 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry10.place(x=555, y=70)
 
         self.entry11 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry11.place(x=580, y=70)
 
         self.entry12 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
-        # self.entry12.place(x=605, y=70)
+
+        self.entry13 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
+
+        self.entry14 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
+
+        self.entry15 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
+
+        self.entry16 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
+
+        self.entry17 = customtkinter.CTkEntry(master=self.frame, placeholder_text="", width=5)
+
 
         # list of entries
-        self.listEntry = [self.entry12, self.entry11, self.entry10, self.entry9, self.entry8, self.entry7, self.entry6,
+        self.listEntry = [self.entry17,self.entry16,self.entry15,self.entry14,self.entry13,self.entry12, self.entry11, self.entry10, self.entry9, self.entry8, self.entry7, self.entry6,
                           self.entry5,self.entry4, self.entry3, self.entry2, self.entry1]
 
         # Button for change binary number
@@ -240,7 +236,17 @@ class GUI(customtkinter.CTk):
 
     def switch_event(self):
 
-        print(self.switchVar.get())
+        if self.switchVar.get() == "On":
+
+            self.paridad = True
+
+        else:
+
+            self.paridad = False
+
+        print(self.paridad)
+
+
 
     def Calculate(self):
 
@@ -258,7 +264,9 @@ class GUI(customtkinter.CTk):
 
             self.binary = str(self.binary)
             self.binary = "0" * (12 - len(self.binary)) + self.binary
-            self.SetNumberOnEntry(self.binary)
+
+            print("binary with zeros ", self.binary)
+
 
         else:
 
@@ -286,11 +294,10 @@ class GUI(customtkinter.CTk):
             self.labelError.place(x=630, y=80)
             return False
 
-        number = str(number)
         number = number[::-1]
         index = 0
-        posx = 580
-        posy = 70
+        posx = 600
+        posy = 420
 
         for i in self.listEntry:
 
@@ -309,10 +316,9 @@ class GUI(customtkinter.CTk):
             self.listEntry[i].place(x=posx, y=posy)
             posx -= 25
 
-        self.changeButton.place(x=385, y=120)
+        self.changeButton.place(x=650, y=420)
 
     def GetNewNumber(self):
-
 
         newNumber = ""
         tempList = self.listEntry[::-1]
@@ -339,21 +345,15 @@ class GUI(customtkinter.CTk):
 
         return False
 
-    def par(self):
-        self.paridad
-        self.paridad = True
-        print("Paridad Par")
-
-    def impar(self):
-        self.paridad
-        self.paridad = False
-        print("Paridad Impar")
 
     def generarHamm(self, binary, root, paridad):
 
         print("Generando codigo Hamming")
         self.hamming.Obtener_dato(binary)
-        hammOutput = self.hamming.calcBitParidad(paridad)
+        self.hammOutput = self.hamming.calcBitParidad(paridad)
+
+
+        self.SetNumberOnEntry(self.hammOutput)
 
         lista1 = [(
                   " ", "p1", "p2", "d1", "p3", "d2", "d3", "d4", "p4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "p5",
@@ -361,30 +361,30 @@ class GUI(customtkinter.CTk):
                   ("Palabra de datos sin paridad:", " ", " ", binary[0], " ", binary[1], binary[2], binary[3], " ",
                    binary[4], binary[5], binary[6],
                    binary[7], binary[8], binary[9], binary[10], " ", binary[11]),
-                  ("p1", hammOutput[0], " ", hammOutput[2], " ", hammOutput[4], "", hammOutput[6], " ", hammOutput[8],
-                   " ", hammOutput[10],
-                   " ", hammOutput[12], " ", hammOutput[14], " ", hammOutput[16]),
-                  ("p2", " ", hammOutput[1], hammOutput[2], " ", " ", hammOutput[5], hammOutput[6], " ", " ",
-                   hammOutput[9], hammOutput[10],
-                   " ", " ", hammOutput[13], hammOutput[14], " ", " "),
-                  ("p3", " ", " ", " ", hammOutput[3], hammOutput[4], hammOutput[5], hammOutput[6], " ", " ", " ", " ",
-                   hammOutput[11],
-                   hammOutput[12], hammOutput[13], hammOutput[14], " ", " "),
-                  ("p4", " ", " ", " ", " ", " ", " ", " ", hammOutput[7], hammOutput[8], hammOutput[9], hammOutput[10],
-                   hammOutput[11],
-                   hammOutput[12], hammOutput[13], hammOutput[14], " ", " "),
-                  ("p5", " ", " ", " ", " ", " ", " ", " ", "", "", "", "", "", "", "", "", hammOutput[15],
-                   hammOutput[16]),
-                  ("Palabra de datos con paridad:", hammOutput[0], hammOutput[1], hammOutput[2], hammOutput[3],
-                   hammOutput[4], hammOutput[5],
-                   hammOutput[6], hammOutput[7], hammOutput[8], hammOutput[9], hammOutput[10], hammOutput[11],
-                   hammOutput[12], hammOutput[13], hammOutput[14], hammOutput[15], hammOutput[16])]
+                  ("p1", self.hammOutput[0], " ", self.hammOutput[2], " ", self.hammOutput[4], "", self.hammOutput[6], " ", self.hammOutput[8],
+                   " ", self.hammOutput[10],
+                   " ", self.hammOutput[12], " ", self.hammOutput[14], " ", self.hammOutput[16]),
+                  ("p2", " ", self.hammOutput[1], self.hammOutput[2], " ", " ", self.hammOutput[5], self.hammOutput[6], " ", " ",
+                   self.hammOutput[9], self.hammOutput[10],
+                   " ", " ", self.hammOutput[13], self.hammOutput[14], " ", " "),
+                  ("p3", " ", " ", " ", self.hammOutput[3], self.hammOutput[4], self.hammOutput[5], self.hammOutput[6], " ", " ", " ", " ",
+                   self.hammOutput[11],
+                   self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], " ", " "),
+                  ("p4", " ", " ", " ", " ", " ", " ", " ", self.hammOutput[7], self.hammOutput[8], self.hammOutput[9], self.hammOutput[10],
+                   self.hammOutput[11],
+                   self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], " ", " "),
+                  ("p5", " ", " ", " ", " ", " ", " ", " ", "", "", "", "", "", "", "", "", self.hammOutput[15],
+                   self.hammOutput[16]),
+                  ("Palabra de datos con paridad:", self.hammOutput[0], self.hammOutput[1], self.hammOutput[2], self.hammOutput[3],
+                   self.hammOutput[4], self.hammOutput[5],
+                   self.hammOutput[6], self.hammOutput[7], self.hammOutput[8], self.hammOutput[9], self.hammOutput[10], self.hammOutput[11],
+                   self.hammOutput[12], self.hammOutput[13], self.hammOutput[14], self.hammOutput[15], self.hammOutput[16])]
 
         tabla1 = Table(root, 8, 18, lista1, 10)
 
     def generar(self):
         num = "110101100101"
-        self.generarHamm(num, self.table, self.paridad)
+        self.generarHamm(self.binary, self.table, self.paridad)
         print("Generado")
 
 
