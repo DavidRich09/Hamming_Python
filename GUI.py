@@ -320,19 +320,15 @@ class GUI(customtkinter.CTk):
 
     def GetNewNumber(self):
 
-        newNumber = ""
+        self.newNumber= []
         tempList = self.listEntry[::-1]
 
         for i in tempList:
 
             if i.get() != "":
-                newNumber += i.get()[0]
+                self.newNumber.append(i.get()[0])
 
-
-        self.octal = self.converter.BinaryToOctal(newNumber)
-        self.numberEntry.delete(0, END)
-        self.numberEntry.insert(0, self.octal)
-        self.Calculate()
+       #newNumber será el nuevo número binario que se modificó por el usuario
 
     def ValidateChangeNumber(self):
 
@@ -350,8 +346,7 @@ class GUI(customtkinter.CTk):
 
         print("Generando codigo Hamming")
         self.hamming.Obtener_dato(binary)
-        self.hammOutput = self.hamming.calcBitParidad(paridad)
-
+        self.hammOutput = self.hamming.calcBitParidad(paridad)\
 
         self.SetNumberOnEntry(self.hammOutput)
 
