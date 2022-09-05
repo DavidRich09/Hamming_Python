@@ -252,11 +252,13 @@ class GUI(customtkinter.CTk):
             self.binary = self.converter.OctalToBinary(number)
             self.hexa = self.converter.OctalToHexadecimal(number)
 
-            self.SetNumberOnEntry(self.binary)
-
             self.decimalNumber.configure(text=str(self.decimal))
             self.binaryNumber.configure(text=str(self.binary))
             self.hexaNumber.configure(text=str(self.hexa))
+
+            self.binary = str(self.binary)
+            self.binary = "0" * (12 - len(self.binary)) + self.binary
+            self.SetNumberOnEntry(self.binary)
 
         else:
 
@@ -278,6 +280,11 @@ class GUI(customtkinter.CTk):
             return False
 
     def SetNumberOnEntry(self, number):
+
+        if self.ValidateChangeNumber():
+            self.labelError = customtkinter.CTkLabel(master=self.frame, text="Mistake with the binary number")
+            self.labelError.place(x=630, y=80)
+            return False
 
         number = str(number)
         number = number[::-1]
@@ -306,17 +313,31 @@ class GUI(customtkinter.CTk):
 
     def GetNewNumber(self):
 
+
         newNumber = ""
         tempList = self.listEntry[::-1]
 
         for i in tempList:
 
-            newNumber += i.get()[0]
+            if i.get() != "":
+                newNumber += i.get()[0]
+
 
         self.octal = self.converter.BinaryToOctal(newNumber)
         self.numberEntry.delete(0, END)
         self.numberEntry.insert(0, self.octal)
         self.Calculate()
+
+    def ValidateChangeNumber(self):
+
+        for i in self.listEntry:
+
+            if i.get() != "":
+
+                if int(i.get()) >= 1:
+                    return True
+
+        return False
 
     def par(self):
         self.paridad
