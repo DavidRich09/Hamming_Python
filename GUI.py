@@ -338,14 +338,14 @@ class GUI(customtkinter.CTk):
             self.binary = self.converter.OctalToBinary(number)
             self.hexa = self.converter.OctalToHexadecimal(number)
 
-            self.decimalNumber.configure(text=str(self.decimal))
-            self.binaryNumber.configure(text=str(self.binary))
-            self.hexaNumber.configure(text=str(self.hexa))
-
             self.binary = str(self.binary)
             self.binary = "0" * (12 - len(self.binary)) + self.binary
 
             print("binary with zeros ", self.binary)
+
+            self.decimalNumber.configure(text=str(self.decimal))
+            self.binaryNumber.configure(text=str(self.binary))
+            self.hexaNumber.configure(text=str(self.hexa))
 
             graphic = Graphic(self.binary, self.bipolar)
             graphic.Run()
